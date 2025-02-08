@@ -45,8 +45,15 @@ class Animal{
 	}
 	
 	//3 more public methods
+
 	public void eat() {
-		System.out.println(name + " is eating");
+		System.out.println("Animal is eating");
+	}
+	public void sleep() {
+		System.out.println("Animal is sleeping");
+	}
+	public void swim() {
+		System.out.println("Animal is swimming");
 	}
 	
 	
