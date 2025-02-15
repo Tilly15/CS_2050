@@ -9,12 +9,12 @@ public class TillinghastGE01Polymorphism {
 	public static void main(String[] args) throws FileNotFoundException {
 		//open test file animals.txt
 		final String animal_file = "Animals.txt"; //file to read in
-		Scanner fileScanner = null;
+		Scanner fileScanner = null; //open the Scanner
 		try
 		{
-			fileScanner = new Scanner(new File(animal_file));
+			fileScanner = new Scanner(new File(animal_file)); //initiate the scanner to scan the file
 			int totalAnimals = Integer.parseInt(fileScanner.next().trim());// find the total number of elements in array
-			Animal[] animals = new Animal[totalAnimals];
+			Animal[] animals = new Animal[totalAnimals]; //create the polymorphic array
 				//for loop for each instance
 				for (int i = 0; i < totalAnimals; i++) {
 					String type = fileScanner.next().trim();
@@ -53,21 +53,20 @@ public class TillinghastGE01Polymorphism {
 					}
 					System.out.print("Animal [" + i + "] is a ");
 					if (animals[i]instanceof Bear) {
-						System.out.print("Bear\nBear ");
+						System.out.print("Bear\nBear: ");
 					}
 					else if (animals[i]instanceof Elephant) {
-						System.out.print("Elephant\nElephant ");
+						System.out.print("Elephant\nElephant: ");
 					}
 					else if (animals[i]instanceof Monkey) {
 						System.out.print("Monkey\nMonkey ");
 					}
 					else if (animals[i]instanceof Sloth) {
-						System.out.print("Sloth\nSloth ");
+						System.out.print("Sloth\nSloth: ");
 					}
-					System.out.print("Name: " + animals[i].getName().toString()+ " - ");
-					//System.out.print("Weighs: " + animals[i].getWeight().toString()+ " - ");
-					//System.out.print("Sleeps: " + animals[i].getSleep().toString()+ " - ");
-					System.out.print("Location:  " + animals[i].getLocation().toString()+"\n");
+					
+					//I'm not sure
+					System.out.println(animals[i].toString());//call on overriden toString() method
 					animals[i].eat();
 					animals[i].sleep();
 					animals[i].swim();
@@ -75,17 +74,16 @@ public class TillinghastGE01Polymorphism {
 					
 				}
 		}
-		catch (FileNotFoundException e)//catch the error if the file doesn't work
+		catch (FileNotFoundException e)//catch the error if the file doesn't exist
 		{
 			System.out.println("Error: Can't upload animal information\n" + e.getMessage());
 		}
 		finally {
 			if (fileScanner != null)
 			{
+				//close the scanner
 				fileScanner.close();
 			}
-
-			
 		}
 
 	}
@@ -174,9 +172,12 @@ class Bear extends Animal{
 	
 	@Override
 	public String toString() {
-        return String.format("Sloth: Name = %s, Food = %s, Weight = %d, Sleep = %s hours, Location = %s",
-                getName(), getFood(), (int) getWeight(), String.format("%.0f", getSleep()), getLocation());
+        return String.format("Name: %s - Weighs: %d lbs - Sleeps: %s hours - Location:  %s",
+                getName(), (int) getWeight(), String.format("%.0f", getSleep()), getLocation());
     }
+	
+	
+
 }
 
 class Elephant extends Animal{
@@ -196,6 +197,12 @@ class Elephant extends Animal{
 		    System.out.println(String.format("Elephant is sleeping %.0f hours", getSleep()));
 		    //format to 0 decimal places
 		}
+		
+		@Override
+		public String toString() {
+	        return String.format("Name: %s - Weighs: %d lbs - Sleeps: %s hours - Location:  %s",
+	                getName(), (int) getWeight(), String.format("%.0f", getSleep()), getLocation());
+	    }
 }
 
 class Monkey extends Animal{
@@ -218,6 +225,12 @@ class Monkey extends Animal{
 	public void swim() {
 		System.out.println("Monkey is swimming");
 	}
+	
+	@Override
+	public String toString() {
+        return String.format("Name: %s - Weighs: %d lbs - Sleeps: %s hours - Location:  %s",
+                getName(), (int) getWeight(), String.format("%.0f", getSleep()), getLocation());
+    }
 
 }
 
@@ -232,6 +245,12 @@ class Sloth extends Animal{
 			int sleep, String location) {
 		super (name, food, weight, sleep, location);
 	}
+	
+	@Override
+	public String toString() {
+        return String.format("Name: %s - Weighs: %d lbs - Sleeps: %s hours - Location:  %s",
+                getName(), (int) getWeight(), String.format("%.0f", getSleep()), getLocation());
+    }
 	
 }
 
