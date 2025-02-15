@@ -13,7 +13,7 @@ public class DealershipExceptionHandling
 	public static void main(String[] args)
 	{
 		//see how exception works then fix to be a 5
-		final int MAX_NUM_CARS = 5;
+		final int MAX_NUM_CARS = -5;
 		// see how exception works then fix to find file
 		final String DEALERSHIP1_FILE = "dealership1.txt";
 
