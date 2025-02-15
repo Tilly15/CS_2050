@@ -8,27 +8,13 @@ public class TillinghastGE01Polymorphism {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		//open test file animals.txt
-		final String animal_file = "Animals.txt";
-		animalSetUp(animal_file);
-		
-		
-	}
-
-	/**
-	 * this function reads the file and initializes the polymorphic array of animals
-	 * 
-	 * 
-	 */
-	 
-	public static void animalSetUp(String filename) throws FileNotFoundException{
+		final String animal_file = "Animals.txt"; //file to read in
 		Scanner fileScanner = null;
 		try
 		{
-			fileScanner = new Scanner(new File(filename));
-			int totalAnimals = Integer.parseInt(fileScanner.next().trim());
+			fileScanner = new Scanner(new File(animal_file));
+			int totalAnimals = Integer.parseInt(fileScanner.next().trim());// find the total number of elements in array
 			Animal[] animals = new Animal[totalAnimals];
-			while (fileScanner.hasNextLine())
-			{
 				//for loop for each instance
 				for (int i = 0; i < totalAnimals; i++) {
 					String type = fileScanner.next().trim();
@@ -40,43 +26,58 @@ public class TillinghastGE01Polymorphism {
 					//But I couldn't find a better way without using code I am not familiar with
 					String location = fileScanner.next().trim();
 					String location2 = fileScanner.next().trim();
-					location = location +" "+ location2;
-					animals[i] = new Bear(name, food, weight, sleep, location);
+					location = location + " " + location2;
+					
 				
-				//below code doesn't work
+				//initiate each instance
 				if (type.equals("Bear")) {
 					animals[i] = new Bear(name, food, weight, sleep, location);
 				}
 				
-				if (type == "Elephant") {
+				if (type.equals("Elephant")) {
 					animals[i] = new Elephant(name, food, weight, sleep, location);
 				}
-				if (type == "Monkey") {
+				if (type.equals("Monkey")) {
 					animals[i] = new Monkey(name, food, weight, sleep, location);
 				}
-				if (type == "Sloth") {
-					animals[i] = new Bear(name, food, weight, sleep, location);
+				if (type.equals("Sloth")) {
+					animals[i] = new Sloth(name, food, weight, sleep, location);
 				}
 				
 				}
-				
-			}//end of while
+			
 			//now we have a 7 member polymorphic array
-			for (int i=0; i<totalAnimals;i++) {
-				if (animals[0]instanceof Bear) {
-					System.out.println("Animal["+i+"] is a Bear");
+				for (int i=0; i<totalAnimals;i++) {
+					if (i>0) {
+						System.out.println();
+					}
+					System.out.print("Animal [" + i + "] is a ");
+					if (animals[i]instanceof Bear) {
+						System.out.print("Bear\nBear ");
+					}
+					else if (animals[i]instanceof Elephant) {
+						System.out.print("Elephant\nElephant ");
+					}
+					else if (animals[i]instanceof Monkey) {
+						System.out.print("Monkey\nMonkey ");
+					}
+					else if (animals[i]instanceof Sloth) {
+						System.out.print("Sloth\nSloth ");
+					}
+					System.out.print("Name: " + animals[i].getName().toString()+ " - ");
+					//System.out.print("Weighs: " + animals[i].getWeight().toString()+ " - ");
+					//System.out.print("Sleeps: " + animals[i].getSleep().toString()+ " - ");
+					System.out.print("Location:  " + animals[i].getLocation().toString()+"\n");
+					animals[i].eat();
+					animals[i].sleep();
+					animals[i].swim();
+
+					
 				}
-				else if (animals[0]instanceof Elephant) {
-					System.out.println("Animal[\"+i+\"] is an Elephant");
-				}
-				else if (animals[0]instanceof Monkey) {
-					System.out.println("Animal[\"+i+\"] is a Monkey");
-				}
-				else if (animals[0]instanceof Sloth) {
-					System.out.println("Animal[\"+i+\"] is a Sloth");
-				}
-				System.out.println(animals[i].name().toString());
-			}
+		}
+		catch (FileNotFoundException e)//catch the error if the file doesn't work
+		{
+			System.out.println("Error: Can't upload animal information\n" + e.getMessage());
 		}
 		finally {
 			if (fileScanner != null)
@@ -88,10 +89,8 @@ public class TillinghastGE01Polymorphism {
 		}
 
 	}
-
-
-
-
+	//end of main
+	 
 }
 
 class Animal{
@@ -139,7 +138,7 @@ class Animal{
 		System.out.println("Animal is eating");
 	}
 	public void sleep() {
-		System.out.println("Animal is sleeping");
+		System.out.println("Animal is sleeping - do not disturb");
 	}
 	public void swim() {
 		System.out.println("Animal is swimming");
@@ -155,7 +154,7 @@ class Bear extends Animal{
 	
 	public Bear(String name, String food, int weight,
 			int sleep, String location) {
-		
+		super (name, food, weight, sleep, location);//explicit call to superclass
 	}
 	
 	//override eat, sleep, and swim for Bear
@@ -165,13 +164,19 @@ class Bear extends Animal{
 	}
 	@Override
 	public void sleep() {
-		System.out.println("Bear is sleeping " + getSleep() +" hours");
-		
+	    System.out.println(String.format("Bear is sleeping %.0f hours", getSleep()));
+	    //format to 0 decimal places
 	}
 	@Override
 	public void swim() {
 		System.out.println("Bear is swimming");
 	}
+	
+	@Override
+	public String toString() {
+        return String.format("Sloth: Name = %s, Food = %s, Weight = %d, Sleep = %s hours, Location = %s",
+                getName(), getFood(), (int) getWeight(), String.format("%.0f", getSleep()), getLocation());
+    }
 }
 
 class Elephant extends Animal{
@@ -182,13 +187,14 @@ class Elephant extends Animal{
 	
 	public Elephant(String name, String food, int weight,
 			int sleep, String location) {
-		
+		super (name, food, weight, sleep, location);//explicit
 	}
 
 	//override sleep for Elephant
 		@Override
 		public void sleep() {
-			System.out.println("Elephant is sleeping " + getSleep() +" hours");
+		    System.out.println(String.format("Elephant is sleeping %.0f hours", getSleep()));
+		    //format to 0 decimal places
 		}
 }
 
@@ -200,7 +206,7 @@ class Monkey extends Animal{
 	
 	public Monkey(String name, String food, int weight,
 			int sleep, String location) {
-		
+		super (name, food, weight, sleep, location);
 	}
 	//override eat and swim for Monkey
 	@Override
@@ -224,6 +230,7 @@ class Sloth extends Animal{
 	
 	public Sloth(String name, String food, int weight,
 			int sleep, String location) {
+		super (name, food, weight, sleep, location);
 	}
 	
 }
