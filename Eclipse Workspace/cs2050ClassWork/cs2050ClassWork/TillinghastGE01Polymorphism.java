@@ -9,7 +9,7 @@ public class TillinghastGE01Polymorphism {
 	public static void main(String[] args) throws FileNotFoundException {
 		//open test file animals.txt
 		final String animal_file = "Animals.txt"; //file to read in
-		Scanner fileScanner = null; //open the Scanner
+		Scanner fileScanner = null;//open the Scanner
 		try
 		{
 			fileScanner = new Scanner(new File(animal_file)); //initiate the scanner to scan the file
