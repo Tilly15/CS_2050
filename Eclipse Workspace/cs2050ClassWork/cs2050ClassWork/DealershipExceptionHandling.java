@@ -69,6 +69,7 @@ public class DealershipExceptionHandling
 				String make = fileScanner.next().trim();
 				String model = fileScanner.next().trim();
 				double price = Double.parseDouble(fileScanner.next().trim());
+				
 				Car currentCar = new Car(make, model, price);
 				dealership.addCar(currentCar);
 			}
