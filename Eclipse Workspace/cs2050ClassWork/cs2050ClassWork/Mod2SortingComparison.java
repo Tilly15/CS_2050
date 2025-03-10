@@ -7,6 +7,9 @@ import java.util.Random;
 public class Mod2SortingComparison
 {
 	public static void main(String[] args) {
+		int [] array2 = {2,4,1,3};
+		bubbleSort(array2);
+		
         int[] sizes = {100, 1000, 10000, 50000}; // Array sizes to test
 
         for (int size : sizes) {
@@ -73,7 +76,9 @@ public class Mod2SortingComparison
         int n = array.length;
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - 1 - i; j++) {
+            	System.out.println("Comparing "+array[j]+" and "+array[j+1]);
                 if (array[j] > array[j + 1]) {
+                	System.out.println("Swapping");
                     int temp = array[j];
                     array[j] = array[j + 1];
                     array[j + 1] = temp;

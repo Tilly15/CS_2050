@@ -2,15 +2,19 @@ package cs2050ClassWork;
 
 public class TillinghastGE012DArray {
 
-	public TillinghastGE012DArray() {
-		// TODO Auto-generated constructor stub
-	}
-
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
 		final int ROWS = 2; // number of rows in cars 2d array
 		final int COLUMNS = 3; //number of columns is cars 2d array
-		String[][] cars = new String[ROWS][COLUMNS];
+		CarA[][] cars = new CarA[ROWS][COLUMNS]; //2D array of Car objects
+		cars[0][0] = new CarA("Ford");
+		cars[0][1] = new CarA("Dodge");
+		cars[0][2] = new CarA("Toyota");
+		cars[1][0] = new CarA("Hyundai");
+		cars[1][1] = new CarA("Chevrolet");
+		cars[1][2] = new CarA("Subaru");
+
+		
 		//loop to print out array labeling column and row number
 		for(int row = 0; row < cars.length; row++) {
 			//create a top row as a heading for the columns
@@ -27,7 +31,7 @@ public class TillinghastGE012DArray {
 			
 			for(int col = 0; col < cars[0].length; col++) {
 				
-				System.out.print(cars[row][col]+" "); //print out each entry in the array
+				cars[row][col].printMake(); //print out each entry in the array
 			}
 			
 		}
@@ -35,15 +39,16 @@ public class TillinghastGE012DArray {
 		
 					
 	}
+}
 	
-	class Car{
+	class CarA{
 		private String make;
 
-		public Car() { 
+		public CarA() { 
 	   this.make = "Unknown"; 
 	}
 		
-	public Car(String make) {
+	public CarA(String make) {
 	 	   this.make = make;
 	}
 
@@ -55,4 +60,3 @@ public class TillinghastGE012DArray {
 	
 
 		
-	}
