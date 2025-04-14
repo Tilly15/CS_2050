@@ -7,26 +7,6 @@ import java.io.FileNotFoundException;
 public class Project01 {
 
 	public static void main(String[] args) {
-
-		
-		
-		CarP car = new CarP("Ford", "Escape",2016,15000);
-		CarP car2 = new CarP("Subaru", "Outback", 2022, 15000);
-		CarP car3 = new CarP("Honda", "Civic",2014,16000.50);
-		CarP car4 = new CarP("Toyota","Tundra",2020,25000);
-		VendingMachine vendingMachine = new VendingMachine(3,3);
-		
-		vendingMachine.addCar(2, 2, car);
-		vendingMachine.addCar(1, 1, car2);
-		vendingMachine.addCar(6, 6, car2);
-		vendingMachine.addCar(1, 2, car3);
-		vendingMachine.addCar(2, 1, car4);
-		vendingMachine.displayInventory();
-		vendingMachine.retrieveCar(1, 1);
-		vendingMachine.retrieveCar(2, 2);
-		vendingMachine.insertionSortYear();
-		vendingMachine.insertionSortPrice();
-		
 		// Create a Scanner object for keyboard input.
 		Scanner keyboard = new Scanner(System.in);
 		System.out.print("Enter the number of floors for the car vending machine: "); //get floors
@@ -34,7 +14,7 @@ public class Project01 {
 		System.out.print("Enter the number of spaces for the car vending machine: "); //get spaces
 		final int SPACES = keyboard.nextInt();
 		//create a vending machine based on the users floor and space desires
-		VendingMachine vendingMachine2 = new VendingMachine(FLOORS,SPACES);
+		VendingMachine vendingMachine = new VendingMachine(FLOORS,SPACES);
 		int task = 0;
 		//Print menu for the user
 		do {
@@ -52,7 +32,7 @@ public class Project01 {
 				System.out.print("Enter file name: ");
 				String file_name = keyboard.next();
 				try {
-					readFile(vendingMachine2,file_name);
+					readFile(vendingMachine,file_name);
 					//using method readFile to read the file the user has entered
 				}
 				catch (FileNotFoundException e){
@@ -62,7 +42,7 @@ public class Project01 {
 				
 			}
 			else if (task==2) {
-				vendingMachine2.displayInventory();
+				vendingMachine.displayInventory();
 				//displayInventory method
 			}
 			else if (task==3) {
@@ -71,15 +51,15 @@ public class Project01 {
 				System.out.print("Enter location to retrieve car: ");
 				int space = keyboard.nextInt();
 				//user gets to choose from what floor and location to retrieve car from
-				vendingMachine2.retrieveCar(floor,space);
+				vendingMachine.retrieveCar(floor,space);
 			}
 			else if (task==4) {
 				//sort by price
-				vendingMachine2.insertionSortPrice();
+				vendingMachine.insertionSortPrice();
 			}
 			else if (task==5) {
 				//sort by year
-				vendingMachine2.insertionSortYear();
+				vendingMachine.insertionSortYear();
 			}
 			else {
 				if(task==6) {
@@ -125,8 +105,6 @@ public class Project01 {
 				fileScanner.close(); //close file scanner
 			}
 		}
-		
-		
 		
 	}
 }
@@ -200,7 +178,11 @@ class VendingMachine{
 			System.out.println("Error: Invalid Position at Floor: "+floor+ " Space: "+ space);
 			System.out.println("Cannot place Car " +car.toString());
 		}
-		
+		//invalid position at 0
+		else if (floor == 0 || space == 0) {
+			System.out.println("Error: Invalid Position at Floor: "+floor+ " Space: "+ space);
+			System.out.println("Cannot place Car " +car.toString());
+		}
 		//checks to see if the space is empty
 		else if (cars[floor-1][space-1] == null) {
 			//if so the car is added to the array at the given floor and space
@@ -234,56 +216,7 @@ class VendingMachine{
 		}
 	}
 	
-	//use insertion sort to sort by year
-	public void insertionSortYear() {
-		//flatten out 2D array first
-		int n = cars.length*cars[0].length;
-		CarP[] array = new CarP[n];
-		int g = 0; //current index in 1D array
-		for (int floor=0; floor<cars.length;floor++) {
-			for (int space=0; space<cars[0].length;space++) {
-				array[g] = cars[floor][space];
-				g++;
-			}
-		}//now have 1D array called array with all the car objects in there
-		//now we need to remove the null values in the 1D array
-		int null_count = 0;
-		for (int y = 0; y <array.length;y++) {
-			if (array[y] == null) {
-				null_count++;
-			}
-		}
-		CarP[] nonull_array = new CarP[n-null_count]; //create an array of length of the full spaces
-		int nonull_count = 0;
-		for (int x = 0; x <array.length;x++) {
-			if (array[x] != null) {
-				nonull_array[nonull_count]= array[x];
-				nonull_count++;
-			}
-		}
-		if (nonull_array.length == 0) {
-			System.out.println("Can't sort by Year. There are no cars in the vending machine.");
-		}
-		else {
-			//now use insertion sort by year
-			for (int i = 1; i < nonull_array.length; i++) {
-	            CarP key = nonull_array[i];
-	            int j = i - 1;
-	            while (j >= 0 && nonull_array[j].getYear() > key.getYear()) {
-	                nonull_array[j + 1] = nonull_array[j];
-	                j--;
-	            }
-	            nonull_array[j + 1] = key;
-	        }
-			//print out the inventory based on the oldest cars first
-			System.out.println("Sorted Inventory by Year");
-			for (int z = 0;z<nonull_array.length;z++) {
-				System.out.println(nonull_array[z].toString());
-			}
-		}
-		
-		
-	}
+
 	
 	//method added to flatten the 2D array for sorting purposes
 	public CarP[] flattenArray(CarP[][]array) {
@@ -320,6 +253,34 @@ class VendingMachine{
 		
 	}
 	
+	//use insertion sort to sort by year
+	public void insertionSortYear() {
+		//uses both flatten array and remove null first
+		CarP[] oneDarray = flattenArray(cars); 
+	    CarP[] nonull_array = removeNull(oneDarray);
+		if (nonull_array.length == 0) {
+			System.out.println("Can't sort by Year. There are no cars in the vending machine.");
+		}
+		else {
+			//now use insertion sort by year
+			for (int i = 1; i < nonull_array.length; i++) {
+	            CarP key = nonull_array[i];
+	            int j = i - 1;
+	            while (j >= 0 && nonull_array[j].getYear() > key.getYear()) {
+	                nonull_array[j + 1] = nonull_array[j];
+	                j--;
+	            }
+	            nonull_array[j + 1] = key;
+	        }
+			//print out the inventory based on the oldest cars first
+			System.out.println("\nSorted Inventory by Year:");
+			for (int z = 0;z<nonull_array.length;z++) {
+				System.out.println(nonull_array[z].toString());
+			}
+		}
+		
+	}
+	
 	public void insertionSortPrice() {
 		//uses both oneDarray and nonull_array before using insertion sort
 		CarP[] oneDarray = flattenArray(cars); 
@@ -340,7 +301,7 @@ class VendingMachine{
 	            nonull_array[j + 1] = key;
 	        }
 			//print out the inventory based on the cheapest cars first
-			System.out.println("Sorted Inventory by Price");
+			System.out.println("\nSorted Inventory by Price:");
 			for (int z = 0;z<nonull_array.length;z++) {
 				System.out.println(nonull_array[z].toString());
 			}
@@ -349,20 +310,29 @@ class VendingMachine{
 
 	//retrieve a car based on the user's input
 	public void retrieveCar(int floor, int space) {
-		if (floor>cars.length) { //checks to see if there are enough floors
-			System.out.println("The vending machine only has "+cars.length+" floors.");
+		if (floor == 0) {
+			System.out.println("Error: There is no Floor "+floor);
 		}
-		else if(space>cars[0].length) { //checks to see if there are enough spaces
-			System.out.println("Floor "+floor+" only has "+cars[0].length+" spaces.");
+		else if (space == 0){
+			System.out.println("Error: There is no Space "+space+" on floor "+floor);
 		}
 		else {
-			if (cars[floor-1][space-1] != null) { //checks to see if that space is full then retrieves car
-				System.out.println("Car retrieved from Floor "+floor+" Location "+space+": "+cars[floor-1][space-1].toString());
+			if (floor>cars.length) { //checks to see if there are enough floors
+				System.out.println("The vending machine only has "+cars.length+" floors.");
 			}
-			else { //if there is no car at the location
-				System.out.println("No car located at Floor "+floor+" Location "+space);
+			else if(space>cars[0].length) { //checks to see if there are enough spaces
+				System.out.println("Floor "+floor+" only has "+cars[0].length+" spaces.");
+			}
+			else {
+				if (cars[floor-1][space-1] != null) { //checks to see if that space is full then retrieves car
+					System.out.println("Car retrieved from Floor "+floor+" Location "+space+": "+cars[floor-1][space-1].toString());
+				}
+				else { //if there is no car at the location
+					System.out.println("No car located at Floor "+floor+" Location "+space);
+				}
 			}
 		}
+
 		
 	}
 }
