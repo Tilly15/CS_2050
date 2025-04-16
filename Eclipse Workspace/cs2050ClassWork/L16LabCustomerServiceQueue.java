@@ -1,6 +1,8 @@
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.Scanner;
 
 //Main class to simulate the customer service queue system
@@ -9,6 +11,9 @@ public class L16LabCustomerServiceQueue
 	public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         CustomerQueue serviceQueue = new CustomerQueue();
+        Queue<Person> personQueue = new LinkedList<>();
+        //Queue<Integer> numbers = new Queue<>(); //doesn't work
+        Stack<Integer> numbers1 = new Stack<>();
         boolean running = true;
 
         while (running) {
@@ -119,4 +124,7 @@ class CustomerQueue{
 	
 }
 
+class Person{
+	public String name;
+}
 

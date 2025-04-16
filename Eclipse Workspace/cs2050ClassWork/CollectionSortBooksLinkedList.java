@@ -14,6 +14,7 @@ public class CollectionSortBooksLinkedList
 
 		// Step 1: Create a LinkedList (dynamic)
 		LinkedList<Book> bookInventory = new LinkedList<>();
+		
 
 		bookInventory.add(new Book("Unmasking AI", "Dr. Joy Buolamwini", 2023));
 		bookInventory.add(new Book("Hello World", "Hannah Fry", 2018));

@@ -1,5 +1,9 @@
 package cs2050ClassWork;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,6 +11,25 @@ import java.io.FileNotFoundException;
 public class Project01 {
 
 	public static void main(String[] args) {
+		LinkedList<CarP> cars1 = new LinkedList<>();
+		CarP car2 = new CarP("Toyota", "Carola", 2023, 12000, "1-2");
+		CarP car1 = new CarP("Subaru", "Outback", 2022, 15000, "2-3");
+		cars1.add(car2);
+		cars1.add(car1);
+		
+		Map<String,CarP> cars1MapByTitle = new HashMap<>();
+        for (CarP car : cars1) {
+        	cars1MapByTitle.put(car.getPosition(), car); //key = position, value = Car
+        }
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		// Create a Scanner object for keyboard input.
 		Scanner keyboard = new Scanner(System.in);
 		System.out.print("Enter the number of floors for the car vending machine: "); //get floors
@@ -114,17 +137,19 @@ class CarP{ //car was already a class CarP is for "CarProject"
 	private String model;
 	private int year;
 	private double price;
+	private String position;
 	//4 attributes
 	
 	public CarP() {
 		//default constructor
 	}
 	
-	public CarP(String make, String model, int year, double price) {
+	public CarP(String make, String model, int year, double price, String position) {
 		this.make = make;
 		this.model = model;
 		this.year = year;
 		this.price = price;
+		this.position = position;
 		//overload constructor
 	}
 	
@@ -145,12 +170,24 @@ class CarP{ //car was already a class CarP is for "CarProject"
 		return price;
 	}
 	
+	public String getPosition() {
+		return position;
+	}
+	
 	@Override
 	public String toString() {
         return String.format("%s %s %d - $%.1f",
                 getMake(), getModel(), getYear(), getPrice());
     }
 	//added toString method to make printing each car more efficient
+}
+
+class BasicCar extends CarP{
+	
+}
+
+class PremiumCar extends CarP{
+	
 }
 
 class VendingMachine{
