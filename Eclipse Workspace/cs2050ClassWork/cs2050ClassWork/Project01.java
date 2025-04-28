@@ -1,9 +1,12 @@
 package cs2050ClassWork;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,114 +14,136 @@ import java.io.FileNotFoundException;
 public class Project01 {
 
 	public static void main(String[] args) {
-		LinkedList<CarP> cars1 = new LinkedList<>();
-		CarP car2 = new CarP("Toyota", "Carola", 2023, 12000, "1-2");
-		CarP car1 = new CarP("Subaru", "Outback", 2022, 15000, "2-3");
-		cars1.add(car2);
-		cars1.add(car1);
-		
-		Map<String,CarP> cars1MapByTitle = new HashMap<>();
-        for (CarP car : cars1) {
-        	cars1MapByTitle.put(car.getPosition(), car); //key = position, value = Car
-        }
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// Create a Scanner object for keyboard input.
+	//main method
+		/**
+		 * Asks the user for the number of floors and spaces
+		 * in the vending machine and creates the vending machine
+		 * Then gives the user a menu of 10 choices that they
+		 * can choose from to use the different functions
+		 * of the Car Vending Machine.
+		 * Then, based on the user's choice a different method is called
+		 * to fulfill the request.
+		 */
 		Scanner keyboard = new Scanner(System.in);
+		VendingMachine vendingMachine2 = new VendingMachine();
 		System.out.print("Enter the number of floors for the car vending machine: "); //get floors
 		final int FLOORS = keyboard.nextInt();
 		System.out.print("Enter the number of spaces for the car vending machine: "); //get spaces
 		final int SPACES = keyboard.nextInt();
-		//create a vending machine based on the users floor and space desires
-		VendingMachine vendingMachine = new VendingMachine(FLOORS,SPACES);
 		int task = 0;
-		//Print menu for the user
-		do {
+		while (task != 10) {
+			//menu of choices
 			System.out.println("\n=== Car Vending Machine Menu ===\n"
-					+ "1. Load Car Data\n"
-					+ "2. Display Vending Machine\n"
-					+ "3. Retrieve a Car\n"
-					+ "4. Print Sorted Inventory (Price)\n"
-					+ "5. Print Sorted Inventory (Year)\n"
-					+ "6. Exit\n");
+						+ "1. Load Car Data From File\n"
+						+ "2. Display Vending Machine\n"
+						+ "3. Retrieve a Car by Location (Floor & Space)\n"
+						+ "4. Print Sorted Inventory (Price)\n"
+						+ "5. Print Sorted Inventory (Year)\n"
+						+ "6. Search for Cars (Manufacturer & Type)\r\n"
+						+ "7. Add Car to Wash Queue\r\n"
+						+ "8. Process Car Wash Queue\r\n"
+						+ "9. Sell a Car\r\n"
+						+ "10. Exit\n");
 			System.out.print("Enter your choice: ");
-			task = keyboard.nextInt();
-			//now act on what the user chooses
-			if (task==1) {
-				System.out.print("Enter file name: ");
-				String file_name = keyboard.next();
-				try {
-					readFile(vendingMachine,file_name);
-					//using method readFile to read the file the user has entered
-				}
-				catch (FileNotFoundException e){
-					System.out.println("Cannot load car data. File not found.");
-				}
-				
-				
-			}
-			else if (task==2) {
-				vendingMachine.displayInventory();
-				//displayInventory method
-			}
-			else if (task==3) {
-				System.out.print("Enter floor to retrieve car: ");
-				int floor = keyboard.nextInt();
-				System.out.print("Enter location to retrieve car: ");
-				int space = keyboard.nextInt();
-				//user gets to choose from what floor and location to retrieve car from
-				vendingMachine.retrieveCar(floor,space);
-			}
-			else if (task==4) {
-				//sort by price
-				vendingMachine.insertionSortPrice();
-			}
-			else if (task==5) {
-				//sort by year
-				vendingMachine.insertionSortYear();
-			}
-			else {
-				if(task==6) {
-					//leaves and exits
-				}
-				else {
-					System.out.println("Please enter a valid number from the list of options.");
-				}
-			}
+	        task = keyboard.nextInt();
+	                //keyboard.nextLine(); // Consume newline
+	            
+	       switch (task) {
+	            case 1:
+	            	System.out.print("Enter file name: ");
+					String file_name = keyboard.next();
+					try {
+						readFile(vendingMachine2,file_name, FLOORS, SPACES);
+					}
+					catch (FileNotFoundException e){
+						System.out.println("Cannot load car data. File not found.");
+					}
+                    break;
+                case 2:
+                    vendingMachine2.displayInventory();
+                    break;
+                case 3:
+                	System.out.print("Enter floor: ");
+                	int floor = keyboard.nextInt();
+                	System.out.print("Enter space: ");
+                	int space = keyboard.nextInt();
+                	vendingMachine2.retrieveCar(floor, space);
+                	break;
+                case 4:
+                	vendingMachine2.sortByPrice();
+                	break;
+                case 5:
+                	vendingMachine2.sortByYear();
+                	break;
+                case 6:
+                	System.out.print("Enter manufacturer: ");
+                	String model = keyboard.next();
+                	System.out.print("Enter car type (Basic/Premium): ");
+                	String type = keyboard.next();
+                	vendingMachine2.findCars(model, type);
+                	break;
+                case 7:
+                	System.out.print("Enter floor: ");
+                	int floor2 = keyboard.nextInt();
+                	System.out.print("Enter space: ");
+                	int space2 = keyboard.nextInt();
+                	vendingMachine2.addCarToWash(floor2, space2);
+                	break;
+                case 8:
+                	vendingMachine2.washCars();
+                	break;
+                case 9:
+                	System.out.print("Enter the floor of the car to sell: ");
+                	int floor3 = keyboard.nextInt();
+                	System.out.print("Enter the space of the car to sell: ");
+                	int space3 = keyboard.nextInt();
+                	vendingMachine2.sellCar(floor3, space3);
+                	break;
+                case 10:
+                	System.out.println("Exiting Program. Goodbye!");
+                	break;
+	            }
 		}
-		while(task != 6);
-		System.out.println("Exiting Program. Goodbye!");
-		keyboard.close();
+		keyboard.close(); //close keyboard
 	}
 	
-	//method to read a file
-	public static void readFile(VendingMachine vendingMachine, String file_name) throws FileNotFoundException {
+	/**
+	 * Method that reads the file information to create a
+	 * car object for each line of the file
+	 * by creating the necessary parameters:
+	 * position, year, price, make, model, and model.
+	 *  
+	 */
+	public static void readFile(VendingMachine vendingMachine, String file_name, int FLOORS, int SPACES) throws FileNotFoundException {
 		Scanner fileScanner = null;//open the Scanner
 		try {
 			
-			fileScanner = new Scanner(new File(file_name));//with file name
+			fileScanner = new Scanner(new File(file_name));
 			while (fileScanner.hasNextLine()) {
-				if (!fileScanner.hasNextInt()) {
+				if (!fileScanner.hasNext()) {
 					break;
-				}//just in case there are files with empty lines
-				//get each data point one by one by parsing by each type
+				}
+				String type = fileScanner.next().trim();
 				int floor = Integer.parseInt(fileScanner.next().trim());
 				int space = Integer.parseInt(fileScanner.next().trim());
+				String position = floor+"-"+space;
 				int year = Integer.parseInt(fileScanner.next().trim());
 				double price = Double.parseDouble(fileScanner.next().trim());
 				String make = fileScanner.next().trim();
 				String model = fileScanner.next().trim();
-				//create the current car object from that line of the file
-				CarP car = new CarP(make, model, year, price);
-				//add the newly created car to the vendingMachine
-				vendingMachine.addCar(floor+1,space+1,car);
+				if (type.equalsIgnoreCase("B")) {
+					type = "Basic";
+					CarP car = new BasicCar(make, model, year, price, position, type);
+					vendingMachine.addCar(car, FLOORS, SPACES);
+				}
+				else if (type.equalsIgnoreCase("P")) {
+					type = "Premium";
+					CarP car = new PremiumCar(make, model, year, price, position, type);
+					vendingMachine.addCar(car, FLOORS, SPACES);
+				}
+				else {
+					System.out.println("Not a valid type.");
+				}
 			}
 		}
 		
@@ -128,28 +153,35 @@ public class Project01 {
 				fileScanner.close(); //close file scanner
 			}
 		}
-		
 	}
 }
 
-class CarP{ //car was already a class CarP is for "CarProject"
+/**
+ * An abstract class with one abstract method
+ * toString. All the other methods are concrete 
+ * methods (getters).
+ */
+
+abstract class CarP{ //car was already a class CarP is for "CarProject"
 	private String make;
 	private String model;
 	private int year;
 	private double price;
 	private String position;
-	//4 attributes
+	private String type;
+	//6 attributes
 	
 	public CarP() {
 		//default constructor
 	}
 	
-	public CarP(String make, String model, int year, double price, String position) {
+	public CarP(String make, String model, int year, double price, String position, String type) {
 		this.make = make;
 		this.model = model;
 		this.year = year;
 		this.price = price;
 		this.position = position;
+		this.type = type;
 		//overload constructor
 	}
 	
@@ -174,202 +206,245 @@ class CarP{ //car was already a class CarP is for "CarProject"
 		return position;
 	}
 	
+	public String getType() {
+		return type;
+	}
+
 	@Override
-	public String toString() {
-        return String.format("%s %s %d - $%.1f",
-                getMake(), getModel(), getYear(), getPrice());
-    }
+	public abstract String toString();
 	//added toString method to make printing each car more efficient
 }
 
+/**
+ * BasicCar extends the abstract method CarP, overriding the
+ * abstract method toString. The constructor of the super 
+ * class is also called.
+ */
+
 class BasicCar extends CarP{
-	
+	BasicCar(String make, String model, int year, double price, String position, String type){
+		super(make, model, year, price, position, type);
+	}
+	@Override
+	public String toString() {
+		String[] position = getPosition().split("-");
+		int floor = Integer.parseInt(position[0]);
+		int space = Integer.parseInt(position[1]);
+		return String.format("Basic Car: %s %s %d - $%.1f (Floor: "+floor+", Space: "+space+")",
+	            getMake(), getModel(), getYear(), getPrice());
+	}
 }
+
+/**
+ * Premium Car extends the abstract method CarP, overriding the
+ * abstract method toString. The constructor of the super 
+ * class is also called.
+ */
 
 class PremiumCar extends CarP{
-	
+	PremiumCar(String make, String model, int year, double price, String position, String type){
+		super(make, model, year, price, position, type);
+	}
+	@Override
+	public String toString() {
+		String[] position = getPosition().split("-");
+		int floor = Integer.parseInt(position[0]);
+		int space = Integer.parseInt(position[1]);
+		return String.format("Premium Car: %s %s %d - $%.1f (Floor: "+floor+", Space: "+space+")",
+	            getMake(), getModel(), getYear(), getPrice());
+	}
 }
 
+/**
+ * The class VendingMachine contains the LinkedList,
+ * the HashMap, and the CarWashQueue.
+ */
+
 class VendingMachine{
-	//note don't need floors or spaces attributes because those are inputted by the user
-	private CarP [][]cars; //2D array of CarP objects
-	
+	private LinkedList<CarP> cars;
+	private Map<String, CarP> carsMap;
+	private Queue<CarP> carWashQueue;
 	
 	public VendingMachine() {
-		//default constructor
-	}
-	
-	public VendingMachine(int floors, int spaces) {
-		this.cars = new CarP[floors][spaces];
+		this.cars = new LinkedList<CarP>();
+		this.carsMap = new HashMap<>();
+		this.carWashQueue = new LinkedList<CarP>();
 		//overloaded constructor that adds a car to the vending machine
 	}
 	
-	//method to add car at a given floor and space and the object car
-	public void addCar(int floor, int space, CarP car) {
-		
-		if (cars.length < floor) { //checks to see if there are enough floors
-			System.out.println("Error: Invalid Position at Floor: "+floor+ " Space: "+ space);
-			System.out.println("Cannot place Car " +car.toString());
+	/**
+	 * This method adds the car to the HashMap and the
+	 * LinkedList as long as the vending machine is big
+	 * enough and there isn't already a car in that position
+	 */
+	public void addCar(CarP car, int FLOORS, int SPACES) {
+		String[] position = car.getPosition().split("-");
+		int floor = Integer.parseInt(position[0]);
+		int space = Integer.parseInt(position[1]);
+		if (floor > FLOORS) {
+			System.out.println("Error: Invalid Position at Floor "+floor+" Space "+space);
+			System.out.println("Cannot place Car: "+car.toString());
 		}
-		else if (cars[0].length < space) { //checks to see if there are enough spaces
-			System.out.println("Error: Invalid Position at Floor: "+floor+ " Space: "+ space);
-			System.out.println("Cannot place Car " +car.toString());
+		else if (space > SPACES) {
+			System.out.println("Error: Invalid Position at Floor "+floor+" Space "+space);
+			System.out.println("Cannot place Car: "+car.toString());
 		}
-		//invalid position at 0
-		else if (floor == 0 || space == 0) {
-			System.out.println("Error: Invalid Position at Floor: "+floor+ " Space: "+ space);
-			System.out.println("Cannot place Car " +car.toString());
-		}
-		//checks to see if the space is empty
-		else if (cars[floor-1][space-1] == null) {
-			//if so the car is added to the array at the given floor and space
-			cars[floor-1][space-1] = car;
-			//System.out.println("Car placed at: Floor: "+floor+" Space: "+space);
-			//above line was just for testing
-		}
-		//if the space is full the car is not added
-		else {
-			System.out.println("Error: Slot at Floor: "+floor+ " Space: "+space+ " is already occupied.");
+		else if (carsMap.containsKey(car.getPosition())) {
+			//Can't add car position full
+			
+			System.out.println("Error: Slot at Floor: "+floor+ " Space: " +space+ " is already occupied.");
 			System.out.println("Car "+car.toString()+ " cannot be placed.");
 		}
+		else {
+			
+			cars.add(car); //add to LinkedList
+			carsMap.put(car.getPosition(), car); //key = position, value = Car
+			//added to HashMap
+		}
+
+		//need to add if else condition to check if the spot is full
+		//for each loop, iterate through each hash map to see if the spot is full
 	}
 	
+	/**
+	 * This method displays the inventory of all the cars in
+	 * the vending machine.
+	 */
 	public void displayInventory() {
-		//displays inventory
-		System.out.println("Inventory Location");
-		//double for loop for 2D array
-		for (int floor=0; floor<cars.length;floor++) {//loop through floors(rows)
-			System.out.println("Floor "+(floor+1)+":");
-			for (int space=0; space<cars[0].length;space++) {//loop thru spaces(columns)
-				System.out.print("\tSpace "+(space+1));
-				
-				if(cars[floor][space] == null) { //checks to see if the space is empty
-					System.out.print(" Empty\n");
-				}
-				else {
-					System.out.print(": "+cars[floor][space].toString()+"\n"); //prints the car in the space
-				}
-			}
+		if (cars.isEmpty()) {
+			System.out.println("No cars in the Vending Machine.");
 		}
-	}
-	
-
-	
-	//method added to flatten the 2D array for sorting purposes
-	public CarP[] flattenArray(CarP[][]array) {
-		int n = array.length*array[0].length; //1D array length
-		CarP[] oneDarray = new CarP[n]; //create the 1D array
-		int g = 0; //current index in 1D array
-		for (int floor=0; floor<array.length;floor++) {
-			for (int space=0; space<array[0].length;space++) {//loop through 2D array
-				oneDarray[g] = array[floor][space];//add each to the 1D array
-				g++;
-			}
+		for (CarP car : cars) {
+			System.out.println(car.toString());
 		}
-		return oneDarray;
-	}
-	
-	//method to remove null values from a 1D CarP array for sorting purposes
-	public CarP[] removeNull(CarP[] array) {
-		int null_count = 0;
-		//counts the number of empty spaces (null values)
-		for (int y = 0; y <array.length;y++) {
-			if (array[y] == null) {
-				null_count++;
-			}
-		}
-		CarP[] nonull_array = new CarP[array.length-null_count]; //create an array of length of the full spaces
-		int nonull_count = 0;
-		for (int x = 0; x < array.length;x++) {
-			if (array[x] != null) {
-				nonull_array[nonull_count]= array[x];
-				nonull_count++;
-			}
-		}
-		return nonull_array;
-		
-	}
-	
-	//use insertion sort to sort by year
-	public void insertionSortYear() {
-		//uses both flatten array and remove null first
-		CarP[] oneDarray = flattenArray(cars); 
-	    CarP[] nonull_array = removeNull(oneDarray);
-		if (nonull_array.length == 0) {
-			System.out.println("Can't sort by Year. There are no cars in the vending machine.");
-		}
-		else {
-			//now use insertion sort by year
-			for (int i = 1; i < nonull_array.length; i++) {
-	            CarP key = nonull_array[i];
-	            int j = i - 1;
-	            while (j >= 0 && nonull_array[j].getYear() > key.getYear()) {
-	                nonull_array[j + 1] = nonull_array[j];
-	                j--;
-	            }
-	            nonull_array[j + 1] = key;
-	        }
-			//print out the inventory based on the oldest cars first
-			System.out.println("\nSorted Inventory by Year:");
-			for (int z = 0;z<nonull_array.length;z++) {
-				System.out.println(nonull_array[z].toString());
-			}
-		}
-		
-	}
-	
-	public void insertionSortPrice() {
-		//uses both oneDarray and nonull_array before using insertion sort
-		CarP[] oneDarray = flattenArray(cars); 
-	    CarP[] nonull_array = removeNull(oneDarray);
-		//now use insertion sort by year
-	    if (nonull_array.length == 0) { //checks if there are any cars in the vending machine
-	    	System.out.println("Can't sort by Price. There are no cars in the vending machine.");
-	    }
-	    else {
-	    	//insertion sort
-	    	for (int i = 1; i < nonull_array.length; i++) {
-	            CarP key = nonull_array[i];
-	            int j = i - 1;
-	            while (j >= 0 && nonull_array[j].getPrice() > key.getPrice()) {
-	                nonull_array[j + 1] = nonull_array[j];
-	                j--;
-	            }
-	            nonull_array[j + 1] = key;
-	        }
-			//print out the inventory based on the cheapest cars first
-			System.out.println("\nSorted Inventory by Price:");
-			for (int z = 0;z<nonull_array.length;z++) {
-				System.out.println(nonull_array[z].toString());
-			}
-	    }
 	}
 
-	//retrieve a car based on the user's input
+	/**
+	 * This method retrieves a car from a given position
+	 * in the vending machine by searching the HashMap for
+	 * the given position.
+	 */
 	public void retrieveCar(int floor, int space) {
-		if (floor == 0) {
-			System.out.println("Error: There is no Floor "+floor);
-		}
-		else if (space == 0){
-			System.out.println("Error: There is no Space "+space+" on floor "+floor);
+		String position = floor + "-" + space;
+		if (carsMap.containsKey(position)) {
+			CarP car = carsMap.get(position);
+			System.out.println("Car retrieved: "+car.toString());
 		}
 		else {
-			if (floor>cars.length) { //checks to see if there are enough floors
-				System.out.println("The vending machine only has "+cars.length+" floors.");
-			}
-			else if(space>cars[0].length) { //checks to see if there are enough spaces
-				System.out.println("Floor "+floor+" only has "+cars[0].length+" spaces.");
-			}
-			else {
-				if (cars[floor-1][space-1] != null) { //checks to see if that space is full then retrieves car
-					System.out.println("Car retrieved from Floor "+floor+" Location "+space+": "+cars[floor-1][space-1].toString());
-				}
-				else { //if there is no car at the location
-					System.out.println("No car located at Floor "+floor+" Location "+space);
-				}
+			System.out.println("Car not found at this location.");
+		}
+	}
+	
+	/**
+	 * These methods sort all the cars in the vending machine
+	 * by converting the LinkedList into an ArrayList to use
+	 * collection sort to sort by year or price.
+	 */
+	public void sortByYear() {
+		List<CarP> carsArray = new ArrayList<>(cars); //always convert your linked list to an array list for sorting!
+		if (!carsArray.isEmpty()) {
+			System.out.println("Sorted Inventory by Year:");
+			carsArray.sort(Comparator.comparing(CarP::getYear));
+			for (CarP currentcar : carsArray)
+			{
+				System.out.println(currentcar.toString());
 			}
 		}
-
+		else {
+			System.out.println("No cars in the Vending Machine.");
+		}
+	}
+	
+	public void sortByPrice() {
+		List<CarP> carsArray = new ArrayList<>(cars); //always convert your linked list to an array list for sorting!
+		if (!carsArray.isEmpty()) {
+			System.out.println("Sorted Inventory by Price:");
+			carsArray.sort(Comparator.comparing(CarP::getPrice));
+			for (CarP currentcar : carsArray)
+			{
+				System.out.println(currentcar.toString());
+			}
+		}
+		else {
+			System.out.println("No cars in the Vending Machine.");
+		}
+	}
+	
+	/**
+	 * This method searches for cars based on the manufacturer
+	 * and the type of the car by converting the LinkedList into
+	 * an ArrayList. It then sorts the results by the manufacturer.
+	 */
+	public void findCars(String make, String type) {
+	    List<CarP> results = new ArrayList<>();
+	    for (CarP currentCar : cars) {
+	        if (currentCar.getMake().equalsIgnoreCase(make) && currentCar.getType().equalsIgnoreCase(type))  {
+	            results.add(currentCar);
+	        }
+	    }
+	    results.sort(Comparator.comparing(CarP::getMake));
+	    for (CarP currentCar : results)
+	    {
+	    	System.out.println(currentCar.toString());
+	    }
+	    if (results.isEmpty()) {
+	    	System.out.println("No "+type+" cars manufactured by "+make);
+	    }
+	}
+	
+	/**
+	 * This method takes the position of a car and then searches to
+	 * see if there is a car in that position in the Vending Machine.
+	 * If there is the car is then "sold" (the car is removed from the
+	 * Vending Machine).
+	 */
+	public void sellCar(int floor, int space) {
+		String position = floor + "-" + space;
+		if (carsMap.containsKey(position)) {
+			CarP car = carsMap.get(position);
+			cars.remove(car);
+			carsMap.remove(position, car);
+			System.out.println("Car Sold: "+car.toString());
+		}
+		else {
+			System.out.println("No car found at Floor "+floor+", Space "+space);
+		}
+	}
+	
+	/**
+	 * This method adds the car at the given position in the Vending
+	 * Machine (if there is one) and adds it to the Car Wash Queue to
+	 * be washed.
+	 */
+	public void addCarToWash(int floor, int space) {
+		String position = floor + "-" + space;
+		if (carsMap.containsKey(position)) {
+			CarP car = carsMap.get(position);
+			System.out.println("Car retrieved: "+car.toString());
+			carWashQueue.add(car);
+			System.out.println("Car added to wash queue.");
+		}
+		else {
+			System.out.println("No car located at Floor "+floor+" Location "+space);
+		}
+	}
+	
+	/**
+	 * This method takes the cars from the washing machine queue and
+	 * then empties the queue by washing the cars in a first out
+	 * first in order.
+	 */
+	public void washCars() {
+		//need if else if there are no cars in queue
+		if (carWashQueue.isEmpty()) {
+			System.out.println("No cars in the wash queue.");
+		}
 		
+		else {
+			while (!carWashQueue.isEmpty()) {
+	            CarP car = carWashQueue.poll();  // removes and returns the head first in first out
+	            System.out.println("Washing: " + car.toString());
+			}
+		}
 	}
 }

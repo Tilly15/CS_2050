@@ -133,6 +133,33 @@ public class CollectionSortBooksLinkedList
         	System.out.println("Book not found: "+searchTitle);
         }
         
+        System.out.println("\n 4-21 NEW STUFF");
+        //create a tree map where the key is the year and the value is a list of books published
+        //that year, if the year already exists, we don't replace the list, we just add to it
+        TreeMap<Integer,List <Book>> booksByYear = new TreeMap<>();
+        for (Book currentBook : bookInventory) {
+        	booksByYear.putIfAbsent(currentBook.getYear(), new ArrayList<>());
+        	booksByYear.get(currentBook.getYear()).add(currentBook);
+        }
+        
+        //since TreeMap keeps keys sorted, when you iterate through bookByYear.entrySet(), books are
+        //automatically grouped and printed in year order
+        for (Map.Entry<Integer,List<Book>> entry : booksByYear.entrySet()) {
+        	System.out.println("\nYear: "+ entry.getKey());
+        	for (Book book2 : entry.getValue()) {
+        		System.out.println(book2);
+        	}
+        }
+        
+        SortedMap<Integer, List<Book>> before2018 = booksByYear.headMap(2018);
+        
+        for (List<Book> books2 : before2018.values()) {
+        	for (Book book : books2) {
+        		System.out.println(book);
+        	}
+        }
+        
+        
         //Step 11 Allow user to enter a book title author and year
         Scanner keyboard = new Scanner(System.in);
         System.out.println("Enter a book title: ");
@@ -141,6 +168,7 @@ public class CollectionSortBooksLinkedList
         String author = keyboard.next();
         System.out.println("Enter the year: ");
         int year = keyboard.nextInt();
+        keyboard.close();
         
         //add book to linked list
         bookInventory.add(new Book(title, author, year));
@@ -158,6 +186,9 @@ public class CollectionSortBooksLinkedList
         else {
         	System.out.println("Book not found: "+searchTitle2);
         }
+        
+       
+        
         
     }
 	public static List<Book> findBooksByAuthor(List<Book> inventory, String author) {
