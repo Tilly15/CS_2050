@@ -14,6 +14,20 @@ import java.io.FileNotFoundException;
 public class Project01 {
 
 	public static void main(String[] args) {
+		VendingMachine vendingMachine = new VendingMachine();
+		CarP car = new BasicCar("Ford","Escape",2016,10000,"1-1","Basic");
+		CarP car2 = new PremiumCar("Honda", "CRV", 2023, 25000, "2-2", "Premium");
+		CarP car3 = new BasicCar("Subaru", "Outback", 2010, 8000, "3-1", "Basic");
+		CarP car4 = new PremiumCar("Toyota", "4Runner", 2024, 40000, "3-2", "Premium");
+		vendingMachine.addCar(car, 4, 4);
+		vendingMachine.addCar(car2,4,4);
+		vendingMachine.addCar(car3, 4, 4);
+		vendingMachine.addCar(car4, 4, 4);
+		vendingMachine.addCarToWash(3, 2);
+		vendingMachine.addCarToWash(3, 1);
+		vendingMachine.addCarToWash(2, 2);
+		vendingMachine.washCars();
+		
 	//main method
 		/**
 		 * Asks the user for the number of floors and spaces
